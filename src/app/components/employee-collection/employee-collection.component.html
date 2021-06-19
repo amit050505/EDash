@@ -4,7 +4,7 @@
     <h3>Employee List</h3>
   </div>
   <div class="col-md-6 text-right">
-    <button mat-flat-button color="primary" class="btn-action" >Add</button>
+    <button mat-button color="primary" class="btn-action" (click)="openDialog('add')">Add</button>
   </div>
 
 </div>
@@ -36,8 +36,8 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-flat-button color="primary" class="btn-action" (click)="edit(element.name)">Edit</button>
-        <button mat-flat-button color="warn" class="btn-action" (click)="delete(element.name)">Delete</button>
+        <button mat-button color="primary" class="btn-action"  (click)="openDialog('edit')">Edit</button>
+        <button mat-button color="warn" class="btn-action"  (click)="openDialog('delete')">Delete</button>
 
       </td>
     </ng-container>

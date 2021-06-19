@@ -35,3 +35,9 @@ export interface User {
     website: string;
     company: Company;
 }
+
+export interface Dialogdata {
+    title: string;
+    description: string;
+    action: string;
+}

@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { User } from 'src/app/Model/employee.model';
+import { Dialogdata, User } from 'src/app/Model/employee.model';
 import { DataService } from 'src/app/services/data.service';
+import { Inject } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActionDialogComponent } from '../action-dialog/action-dialog.component';
+import { DialogData } from 'src/app/data/data';
 
 @Component({
   selector: 'app-employee-collection',
@@ -19,7 +23,8 @@ export class EmployeeCollectionComponent {
   /**
    *
    */
-  constructor(public dataService: DataService) {
+  constructor(public dataService: DataService,
+    public dialog: MatDialog) {
 
   }
   ngOnInit() {
@@ -28,6 +33,12 @@ export class EmployeeCollectionComponent {
       this.users = response;
     })
   }
+  openDialog(action: string) {
+    this.dialog.open(ActionDialogComponent, {
+      data:  DialogData.filter((item:Dialogdata)=>item.action.toLowerCase() == action.toLowerCase())[0],
+    });
+  }
+
   edit(name: any) {
     alert(name);
   }

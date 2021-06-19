@@ -13,12 +13,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './services/data.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button'
+import { MatButtonModule } from '@angular/material/button';
+import { ActionDialogComponent } from './components/action-dialog/action-dialog.component'
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeCollectionComponent
+    EmployeeCollectionComponent,
+    ActionDialogComponent
   ],
   imports: [
     HttpClientModule,
@@ -32,9 +35,11 @@ import { MatButtonModule } from '@angular/material/button'
     MatSliderModule,
     MatTableModule,
     MatAutocompleteModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule
   ],
   providers: [DataService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ActionDialogComponent]
 })
 export class AppModule { }
