@@ -36,6 +36,12 @@ export interface User {
     company: Company;
 }
 
+export interface DialogConfigData {
+    dialogData: Dialogdata,
+    id: string
+    
+}
+
 export interface Dialogdata {
     title: string;
     description: string;

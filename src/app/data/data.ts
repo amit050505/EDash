@@ -1,4 +1,4 @@
-import { Dialogdata, Employee } from "../Model/employee.model";
+import { Dialogdata, Employee, User } from "../Model/employee.model";
 
 export const ELEMENT_DATA: Employee[] = [
   {
@@ -51,17 +51,70 @@ export const DELETED_ELEMENT_DATA: Employee[] = [
 export const DialogData: Dialogdata[] = [
   {
     title: "Add",
-    description: "This will add the employee details tou have entered.",
+    description: "Entered employee details would be added to the system.",
     action: "Add"
   },
   {
     title: "Delete",
-    description: "This will delete the employee you have choosen.",
+    description: "Employee details would be deleted.",
     action: "Delete"
   },
   {
     title: "Edit",
-    description: "This will update the existing rmployee details.",
+    description: "Existing employee details would be updated.",
     action: "Edit"
+  },
+  {
+    title: "Restore",
+    description: "Deleted employee details would be restored.",
+    action: "Restore"
   }
 ]
+
+export const DeletedUsers: User[] = [
+  {
+    "id": 91,
+    "name": "Samwell Tarly",
+    "username": "sam",
+    "email": "sam@april.biz",
+    "address": {
+      "street": "1486 Buena Vista Dr ",
+      "suite": "Lake Buena Vista, FL",
+      "city": " Lake Buena Vista, FL",
+      "zipcode": "92998-3874",
+      "geo": {
+        "lat": "-37.3159",
+        "lng": "81.1496"
+      }
+    },
+    "phone": "1-770-736-8031 x56442",
+    "website": "hildegard.org",
+    "company": {
+      "name": "HBO",
+      "catchPhrase": "Multi-layered client-server neural-net",
+      "bs": "harness real-time e-markets"
+    }
+  },
+  {
+    "id": 92,
+    "name": "Podrick Payne",
+    "username": "pod",
+    "email": "pod@melissa.tv",
+    "address": {
+      "street": "100 Avenue ",
+      "suite": "Suite 879",
+      "city": "NY 10036 USA",
+      "zipcode": "90566-7771",
+      "geo": {
+        "lat": "-43.9509",
+        "lng": "-34.4618"
+      }
+    },
+    "phone": "010-692-6593 x09125",
+    "website": "anastasia.net",
+    "company": {
+      "name": "Disney",
+      "catchPhrase": "Proactive didactic contingency",
+      "bs": "synergize scalable supply-chains"
+    }
+  }]

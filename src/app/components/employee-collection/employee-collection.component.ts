@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dialogdata, User } from 'src/app/Model/employee.model';
@@ -6,7 +6,8 @@ import { DataService } from 'src/app/services/data.service';
 import { Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActionDialogComponent } from '../action-dialog/action-dialog.component';
-import { DialogData } from 'src/app/data/data';
+import { DeletedUsers, DialogData } from 'src/app/data/data';
+import { SharedDataService } from 'src/app/services/shared-data.service';
 
 @Component({
   selector: 'app-employee-collection',
@@ -16,7 +17,8 @@ import { DialogData } from 'src/app/data/data';
 export class EmployeeCollectionComponent {
   displayedColumns: string[] = ['name', 'company', 'address', "actions"];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  users: any = [];;
+  users: any = [];
+  deletedUsers: any = [];
 
   // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -24,18 +26,32 @@ export class EmployeeCollectionComponent {
    *
    */
   constructor(public dataService: DataService,
-    public dialog: MatDialog) {
+    public shareddataservice: SharedDataService,
+    public dialog: MatDialog,
+    private changeDetectorRefs: ChangeDetectorRef) {
 
   }
   ngOnInit() {
     // this.dataSource.paginator = this.paginator;
     this.dataService.getEmployees().subscribe(response => {
       this.users = response;
+      this.shareddataservice.updateUsers(this.users);
+
     })
+    this.deletedUsers = DeletedUsers;
+    this.shareddataservice.deletedUsers = DeletedUsers;
   }
-  openDialog(action: string) {
-    this.dialog.open(ActionDialogComponent, {
-      data:  DialogData.filter((item:Dialogdata)=>item.action.toLowerCase() == action.toLowerCase())[0],
+  openDialog(action: string, id = 0) {
+    // alert(id);
+    let dialogRef = this.dialog.open(ActionDialogComponent, {
+      data: {
+        dialogData: DialogData.filter((item: Dialogdata) => item.action.toLowerCase() == action.toLowerCase())[0],
+        id: id
+      }
+    });
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == "success")
+        this.refreshData();
     });
   }
 
@@ -44,6 +60,18 @@ export class EmployeeCollectionComponent {
   }
   delete(name: any) {
     alert(name);
+  }
+
+  refreshData() {
+    debugger;
+    
+    
+    this.users = new MatTableDataSource<User[]>();
+    this.deletedUsers = new MatTableDataSource<User[]>();
+
+    this.users.data = this.shareddataservice.users;
+    this.deletedUsers.data = this.shareddataservice.deletedUsers;
+   
   }
 }
 export interface PeriodicElement {
