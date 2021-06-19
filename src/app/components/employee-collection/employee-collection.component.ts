@@ -8,6 +8,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActionDialogComponent } from '../action-dialog/action-dialog.component';
 import { DeletedUsers, DialogData } from 'src/app/data/data';
 import { SharedDataService } from 'src/app/services/shared-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-employee-collection',
@@ -28,9 +29,10 @@ export class EmployeeCollectionComponent {
   constructor(public dataService: DataService,
     public shareddataservice: SharedDataService,
     public dialog: MatDialog,
-    private changeDetectorRefs: ChangeDetectorRef) {
+    private _snackBar: MatSnackBar) {
 
   }
+
   ngOnInit() {
     // this.dataSource.paginator = this.paginator;
     this.dataService.getEmployees().subscribe(response => {
@@ -40,6 +42,11 @@ export class EmployeeCollectionComponent {
     })
     this.deletedUsers = DeletedUsers;
     this.shareddataservice.deletedUsers = DeletedUsers;
+  }
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action,  {
+      duration: 1500
+    });
   }
   openDialog(action: string, id = 0) {
     // alert(id);
@@ -64,13 +71,12 @@ export class EmployeeCollectionComponent {
 
   refreshData() {
     debugger;
-    
-    
     this.users = new MatTableDataSource<User[]>();
     this.deletedUsers = new MatTableDataSource<User[]>();
 
     this.users.data = this.shareddataservice.users;
     this.deletedUsers.data = this.shareddataservice.deletedUsers;
+    this.openSnackBar("Employee deleted successsfuly", "close")
    
   }
 }

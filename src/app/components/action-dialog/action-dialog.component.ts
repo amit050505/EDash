@@ -35,6 +35,9 @@ export class ActionDialogComponent implements OnInit {
       case 'edit':
         this.update();
         break;
+        case 'restore':
+        this.restore();
+        break;
       default: break;
 
     }
@@ -43,10 +46,12 @@ export class ActionDialogComponent implements OnInit {
 
   }
   delete() {
-    debugger;
     this.shareddataservice.deleteUser(this.id);
     this.dialogRef.close("success");
-
+  }
+  restore() {
+    this.shareddataservice.restoreUser(this.id);
+    this.dialogRef.close("success");
   }
 
   update() {

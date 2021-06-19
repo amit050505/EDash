@@ -19,18 +19,18 @@ export class SharedDataService {
 
     if (index > -1) {
       const deleted: User = this.users[index];
-
       this.users.splice(index, 1);
       this.deletedUsers.push(deleted);
     }
-    // this.users = this.users.filter(item=>{
-    //   item.id.toString() != id.toString()
-    // })
+  }
 
-
-
-
-
+  restoreUser(id: string) {
+    let index = this.deletedUsers.findIndex(i => i.id.toString() === id.toString());
+    if (index > -1) {
+      const restored: User = this.deletedUsers[index];
+      this.deletedUsers.splice(index, 1);
+      this.users.push(restored);
+    }
   }
   getUsers(): User[] {
     return this.users
