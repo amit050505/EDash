@@ -29,15 +29,27 @@ export class EmployeeCollectionComponent {
   myControl = new FormControl();
   myControlCompany = new FormControl();
   myControlAddress = new FormControl();
+  
+  deletedMyControl = new FormControl();
+  deletedMyControlCompany = new FormControl();
+  deletedMyControlAddress = new FormControl();
 
   options: string[] = [];
   optionsCompany: string[] = [];
   optionsAddress: string[] = [];
+  
+  deletedOptions: string[] = [];
+  deletedOptionsCompany: string[] = [];
+  deletedOptionsAddress: string[] = [];
+  
 
   filteredOptions: Observable<string[]> = of([]);
   filteredOptionsCompany: Observable<string[]> = of([]);
   filteredOptionsAddress: Observable<string[]> = of([]);
 
+  deletedFilteredOptions: Observable<string[]> = of([]);
+  deletedFilteredOptionsCompany: Observable<string[]> = of([]);
+  deletedFilteredOptionsAddress: Observable<string[]> = of([]);
   // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   /**
@@ -79,6 +91,28 @@ export class EmployeeCollectionComponent {
           map(value => this._filterAddress(value))
         );
 
+
+        //deleted users
+        this.deletedOptions = DeletedUsers.map((item: any) => item.name);
+        this.deletedFilteredOptions = this.deletedMyControl.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this._deletedFilter(value))
+          );
+  
+        this.deletedOptionsCompany = DeletedUsers.map((item: any) => item.company.name);
+        this.deletedFilteredOptionsCompany = this.deletedMyControlCompany.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this._deletedFilterCompany(value))
+          );
+  
+        this.deletedOptionsAddress = DeletedUsers.map((item: any) => item.address.city);
+        this.deletedFilteredOptionsAddress = this.deletedMyControlAddress.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this._deletedFilterAddress(value))
+          );
     })
     this.deletedUsers = DeletedUsers;
     this.shareddataservice.deletedUsers = DeletedUsers;
@@ -121,10 +155,15 @@ export class EmployeeCollectionComponent {
     this.deletedUsers.data = this.shareddataservice.deletedUsers;
    
     const users = this.shareddataservice.users;
+    const deletedUsers = this.shareddataservice.deletedUsers;
+
     this.options = users.map((item: any) => item.name);
     this.optionsCompany = users.map((item: any) => item.company.name);
     this.optionsAddress = users.map((item: any) => item.address.city);
 
+    this.deletedOptions = deletedUsers.map((item: any) => item.name);
+    this.deletedOptionsCompany = deletedUsers.map((item: any) => item.company.name);
+    this.deletedOptionsAddress = deletedUsers.map((item: any) => item.address.city);
   }
 
   private _filter(value: string): string[] {
@@ -144,6 +183,26 @@ export class EmployeeCollectionComponent {
   private _filterAddress(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.optionsAddress.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  // deleted users
+  private _deletedFilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.deletedOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+
+
+  private _deletedFilterCompany(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.deletedOptionsCompany.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+
+
+  private _deletedFilterAddress(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.deletedOptionsAddress.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   filterGridresults() {
@@ -168,6 +227,7 @@ export class EmployeeCollectionComponent {
     })
 
   }
+
   clearFilters() {
 
     this.myControl.setValue("");
@@ -180,6 +240,44 @@ export class EmployeeCollectionComponent {
   clearValue(event: any) {
     event.target.value = "";
     this.filterGridresults();
+  }
+
+  clearDeletedFilters() {
+
+    this.deletedMyControl.setValue("");
+    this.deletedMyControlCompany.setValue("");
+    this.deletedMyControlAddress.setValue("");
+
+    this.deletedUsers = new MatTableDataSource<User[]>();
+    this.deletedUsers.data = this.shareddataservice.deletedUsers;
+  }
+  clearDeletedValue(event: any) {
+    event.target.value = "";
+    this.deletedFilterGridresults();
+  }
+
+  // deleted uders
+  deletedFilterGridresults() {
+
+    const nameFilterKeyword = this.deletedMyControl.value ? this.deletedMyControl.value : "";
+    const companyFilterKeyword = this.deletedMyControlCompany.value ? this.deletedMyControlCompany.value : "";
+    const addressFilterKeyword = this.deletedMyControlAddress.value ? this.deletedMyControlAddress.value : "";
+
+    this.deletedUsers = new MatTableDataSource<User[]>();
+    const dul = this.shareddataservice.deletedUsers;
+    this.deletedUsers.data = dul.filter((u: any) => {
+      if (u.name.indexOf(nameFilterKeyword) != -1 && nameFilterKeyword !== "")
+        return true;
+      if (u.company.name.indexOf(companyFilterKeyword) != -1 && companyFilterKeyword != "")
+        return true;
+
+      if (u.address.city.indexOf(addressFilterKeyword) != -1 && addressFilterKeyword !== "")
+        return true;
+
+      return false;
+
+    })
+
   }
 
 }

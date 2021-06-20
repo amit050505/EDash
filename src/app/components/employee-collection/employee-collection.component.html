@@ -110,6 +110,50 @@
 
   </div>
 
+  
+  <div class="row">
+
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Name</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="deletedMyControl" [matAutocomplete]="auto4">
+       
+        <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="deletedFilterGridresults()">
+          <mat-option *ngFor="let option of deletedFilteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Company</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="deletedMyControlCompany" [matAutocomplete]="auto5">
+        <mat-autocomplete #auto5="matAutocomplete" (optionSelected)="deletedFilterGridresults()">
+          <mat-option *ngFor="let option of deletedFilteredOptionsCompany | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Address</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="deletedMyControlAddress" [matAutocomplete]="auto6">
+        <mat-autocomplete #auto6="matAutocomplete" (optionSelected)="deletedFilterGridresults()">
+          <mat-option *ngFor="let option of deletedFilteredOptionsAddress | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+      <button mat-button color="primary"  (click)="clearDeletedFilters()">Clear</button>
+
+    </div>
+  </div>
+
   <div class="mat-elevation-z8" style="margin-bottom: 50px;">
     <table mat-table [dataSource]="deletedUsers">
 
