@@ -35,6 +35,9 @@ export class SharedDataService {
   getUsers(): User[] {
     return this.users
   }
+  addUser(user: User) {
+    return this.users.push(user);
+  }
 
 
 }

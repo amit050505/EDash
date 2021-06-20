@@ -51,6 +51,8 @@ export class EmployeeCollectionComponent {
   openDialog(action: string, id = 0) {
     // alert(id);
     let dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: true,
+      width: '500px',
       data: {
         dialogData: DialogData.filter((item: Dialogdata) => item.action.toLowerCase() == action.toLowerCase())[0],
         id: id
@@ -76,7 +78,7 @@ export class EmployeeCollectionComponent {
 
     this.users.data = this.shareddataservice.users;
     this.deletedUsers.data = this.shareddataservice.deletedUsers;
-    this.openSnackBar("Employee deleted successsfuly", "close")
+    // this.openSnackBar("Employee deleted successsfuly", "close")
    
   }
 }

@@ -51,7 +51,7 @@ export const DELETED_ELEMENT_DATA: Employee[] = [
 export const DialogData: Dialogdata[] = [
   {
     title: "Add",
-    description: "Entered employee details would be added to the system.",
+    description: "",
     action: "Add"
   },
   {
@@ -61,7 +61,7 @@ export const DialogData: Dialogdata[] = [
   },
   {
     title: "Edit",
-    description: "Existing employee details would be updated.",
+    description: "",
     action: "Edit"
   },
   {

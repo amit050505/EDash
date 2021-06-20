@@ -1,11 +1,51 @@
 <h2 mat-dialog-title>{{title}}</h2>
-<mat-dialog-content>{{description}}</mat-dialog-content>
+<mat-dialog-content>{{description}}
+  <form [formGroup]="EmployeeForm" *ngIf="action == 'add' || action == 'edit' ">
+    <table>
+      <tr>
+        <td>
+          <mat-form-field class="demo-full-width">
+            <input formControlName="name" matInput placeholder="Name">
+          </mat-form-field>
+          <mat-error>
+            <span *ngIf="!EmployeeForm.get('name')?.valid && EmployeeForm.get('name')?.touched">Please enter Name
+              !!!</span>
+          </mat-error>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field class="demo-full-width">
+            <input formControlName="company" matInput placeholder="Company">
+          </mat-form-field>
+          <mat-error>
+            <span *ngIf="!EmployeeForm.get('company')?.valid && EmployeeForm.get('company')?.touched">Please
+              enter Company name
+              !!!</span>
+          </mat-error>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field class="demo-full-width">
+            <input formControlName="address" matInput placeholder="Address">
+          </mat-form-field>
+          <mat-error>
+            <span *ngIf="!EmployeeForm.get('address')?.valid && EmployeeForm.get('address')?.touched">Please
+              enter Address
+              !!!</span>
+          </mat-error>
+        </td>
+      </tr>
+    </table>
+  </form>
+</mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button  mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close>Cancel</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <button mat-button color="warn" [mat-dialog-close]="true" (click)="executeAction()">{{title}}</button>
-  
+  <button mat-button color="warn"  (click)="executeAction()">{{title}}</button>
+
 
 
 </mat-dialog-actions>
