@@ -31,7 +31,17 @@ export class ActionDialogComponent implements OnInit {
     this.action = this.data.dialogData.action.toLowerCase();
     this.id = this.data.id;
     this.buildForm();
+    if(this.action.toLowerCase() == "edit")
+    this.bindEmployeeData();
   }
+  
+  bindEmployeeData() {
+    const usr = this.shareddataservice.getUser(this.id);
+    this.EmployeeForm.get("name")?.setValue(usr.name);
+    this.EmployeeForm.get("company")?.setValue(usr.company?.name);
+    this.EmployeeForm.get("address")?.setValue(usr.address?.city);
+  }
+
   buildForm() {
     return this.fb.group({
       name: ['', Validators.required],
@@ -84,12 +94,14 @@ export class ActionDialogComponent implements OnInit {
     this.dialogRef.close("success");
     this.notificationservice.showmessage("Employee added successfuly");
   }
+
   delete() {
     this.shareddataservice.deleteUser(this.id);
     this.dialogRef.close("success");
     this.notificationservice.showmessage("Employee deleted successfuly");
 
   }
+
   restore() {
     this.shareddataservice.restoreUser(this.id);
     this.dialogRef.close("success");
@@ -98,6 +110,20 @@ export class ActionDialogComponent implements OnInit {
   }
 
   update() {
+    const updatedUserDetails: User = {
+      id : parseInt(this.id),
+      name: this.EmployeeForm.get("name")?.value,
+      address:
+      {
+        city: this.EmployeeForm.get("address")?.value
+      },
+      company: {
+        name: this.EmployeeForm.get("company")?.value.toString()
+      }
+    };
 
+    this.shareddataservice.updateUser(this.id, updatedUserDetails);
+    this.dialogRef.close("success");
+    this.notificationservice.showmessage("Employee details updated successfuly");
   }
 }

@@ -60,7 +60,7 @@ export const DialogData: Dialogdata[] = [
     action: "Delete"
   },
   {
-    title: "Edit",
+    title: "Update",
     description: "",
     action: "Edit"
   },

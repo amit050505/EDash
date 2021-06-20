@@ -33,11 +33,22 @@ export class SharedDataService {
     }
   }
   getUsers(): User[] {
-    return this.users
+    return this.users;
   }
   addUser(user: User) {
     return this.users.push(user);
   }
-
+  updateUser(id: string, user:User) {
+    const index = this.users.findIndex(item=> item.id.toString() == id.toString())
+    debugger;
+    this.users[index].name = user.name;
+    this.users[index].company = user.company;
+    this.users[index].address = user.address;
+    
+  }
+  getUser(id: string) {
+    const index = this.users.findIndex(item=> item.id.toString() == id.toString())
+    return this.users[index];
+  }
 
 }
