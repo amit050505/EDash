@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dialogdata, User } from 'src/app/Model/employee.model';
@@ -9,6 +9,9 @@ import { ActionDialogComponent } from '../action-dialog/action-dialog.component'
 import { DeletedUsers, DialogData } from 'src/app/data/data';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-collection',
@@ -20,6 +23,20 @@ export class EmployeeCollectionComponent {
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   users: any = [];
   deletedUsers: any = [];
+
+
+
+  myControl = new FormControl();
+  myControlCompany = new FormControl();
+  myControlAddress = new FormControl();
+
+  options: string[] = [];
+  optionsCompany: string[] = [];
+  optionsAddress: string[] = [];
+
+  filteredOptions: Observable<string[]> = of([]);
+  filteredOptionsCompany: Observable<string[]> = of([]);
+  filteredOptionsAddress: Observable<string[]> = of([]);
 
   // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -35,16 +52,40 @@ export class EmployeeCollectionComponent {
 
   ngOnInit() {
     // this.dataSource.paginator = this.paginator;
-    this.dataService.getEmployees().subscribe(response => {
+    this.dataService.getEmployees().subscribe((response: any) => {
       this.users = response;
       this.shareddataservice.updateUsers(this.users);
+
+      //autocomplete
+     
+      this.options = response.map((item: any) => item.name);
+      this.filteredOptions = this.myControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this._filter(value))
+        );
+
+      this.optionsCompany = response.map((item: any) => item.company.name);
+      this.filteredOptionsCompany = this.myControlCompany.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this._filterCompany(value))
+        );
+
+      this.optionsAddress = response.map((item: any) => item.address.city);
+      this.filteredOptionsAddress = this.myControlAddress.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this._filterAddress(value))
+        );
 
     })
     this.deletedUsers = DeletedUsers;
     this.shareddataservice.deletedUsers = DeletedUsers;
+
   }
   openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action,  {
+    this._snackBar.open(message, action, {
       duration: 1500
     });
   }
@@ -72,15 +113,75 @@ export class EmployeeCollectionComponent {
   }
 
   refreshData() {
-    debugger;
+    
     this.users = new MatTableDataSource<User[]>();
     this.deletedUsers = new MatTableDataSource<User[]>();
 
     this.users.data = this.shareddataservice.users;
     this.deletedUsers.data = this.shareddataservice.deletedUsers;
-    // this.openSnackBar("Employee deleted successsfuly", "close")
    
+    const users = this.shareddataservice.users;
+    this.options = users.map((item: any) => item.name);
+    this.optionsCompany = users.map((item: any) => item.company.name);
+    this.optionsAddress = users.map((item: any) => item.address.city);
+
   }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+
+
+  private _filterCompany(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.optionsCompany.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+
+
+  private _filterAddress(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.optionsAddress.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  filterGridresults() {
+
+    const nameFilterKeyword = this.myControl.value ? this.myControl.value : "";
+    const companyFilterKeyword = this.myControlCompany.value ? this.myControlCompany.value : "";
+    const addressFilterKeyword = this.myControlAddress.value ? this.myControlAddress.value : "";
+
+    this.users = new MatTableDataSource<User[]>();
+    const ul = this.shareddataservice.users;
+    this.users.data = ul.filter((u: any) => {
+      if (u.name.indexOf(nameFilterKeyword) != -1 && nameFilterKeyword !== "")
+        return true;
+      if (u.company.name.indexOf(companyFilterKeyword) != -1 && companyFilterKeyword != "")
+        return true;
+
+      if (u.address.city.indexOf(addressFilterKeyword) != -1 && addressFilterKeyword !== "")
+        return true;
+
+      return false;
+
+    })
+
+  }
+  clearFilters() {
+
+    this.myControl.setValue("");
+    this.myControlCompany.setValue("");
+    this.myControlAddress.setValue("");
+
+    this.users = new MatTableDataSource<User[]>();
+    this.users.data = this.shareddataservice.users;
+  }
+  clearValue(event: any) {
+    event.target.value = "";
+    this.filterGridresults();
+  }
+
 }
 export interface PeriodicElement {
   name: string;

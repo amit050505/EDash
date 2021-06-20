@@ -1,107 +1,156 @@
+<form class="example-form">
+  <div class="row table-caption">
+    <div class="col-md-6">
+      <h3>Employee List</h3>
+    </div>
+    <div class="col-md-6 text-right">
+      <button mat-button color="primary" class="btn-action" (click)="openDialog('add')">Add</button>
+    </div>
 
-<div class="row table-caption" >
-  <div class="col-md-6">
-    <h3>Employee List</h3>
   </div>
-  <div class="col-md-6 text-right">
-    <button mat-button color="primary" class="btn-action" (click)="openDialog('add')">Add</button>
+
+  <div class="row">
+
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Name</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="myControl" [matAutocomplete]="auto2">
+        <!-- <button matSuffix mat-icon-button aria-label="Clear" (click)="clearValue($event)">
+          <mat-icon>close</mat-icon>
+        </button> -->
+        <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="filterGridresults()">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Company</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="myControlCompany" [matAutocomplete]="auto3">
+        <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="filterGridresults()">
+          <mat-option *ngFor="let option of filteredOptionsCompany | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="example-full-width">
+        <mat-label>Address</mat-label>
+        <input type="text" placeholder="" matInput [formControl]="myControlAddress" [matAutocomplete]="auto1">
+        <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="filterGridresults()">
+          <mat-option *ngFor="let option of filteredOptionsAddress | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-3">
+      <button mat-button color="primary"  (click)="clearFilters()">Clear</button>
+
+    </div>
   </div>
 
-</div>
-
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="users">
-
-    <!-- Position Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef> Address </th>
-      <td mat-cell *matCellDef="let element"> {{element.address?.street}} {{element.address?.city}} </td>
-    </ng-container>
-
-    <!-- Weight Column -->
-    <ng-container matColumnDef="company">
-      <th mat-header-cell *matHeaderCellDef> Company </th>
-      <td mat-cell *matCellDef="let element"> {{element.company?.name}} </td>
-    </ng-container>
 
 
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="users">
 
-    <!-- Get Details -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button color="primary" class="btn-action"  (click)="openDialog('edit', element.id)">Edit</button>
-        <button mat-button color="warn" class="btn-action"  (click)="openDialog('delete', element.id)">Delete</button>
+      <!-- Position Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
 
-      </td>
-    </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef> Address </th>
+        <td mat-cell *matCellDef="let element"> {{element.address?.street}} {{element.address?.city}} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="9999">
-        No Results found.
-      </td>
-    </tr>
-  </table>
+      <!-- Weight Column -->
+      <ng-container matColumnDef="company">
+        <th mat-header-cell *matHeaderCellDef> Company </th>
+        <td mat-cell *matCellDef="let element"> {{element.company?.name}} </td>
+      </ng-container>
 
-  
-  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
-</div>
 
-<div class="row table-caption">
-  <div class="col-md-12">
-    <h3>Deleted Employee List</h3>
+
+      <!-- Get Details -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button color="primary" class="btn-action" (click)="openDialog('edit', element.id)">Edit</button>
+          <button mat-button color="warn" class="btn-action" (click)="openDialog('delete', element.id)">Delete</button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9999">
+          No Results found.
+        </td>
+      </tr>
+    </table>
+
+
+    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
   </div>
- 
 
-</div>
-
-<div class="mat-elevation-z8" style="margin-bottom: 50px;">
-  <table mat-table [dataSource]="deletedUsers">
-
-    <!-- Position Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef> Address </th>
-      <td mat-cell *matCellDef="let element"> {{element.address?.street}} {{element.address?.city}} </td>
-    </ng-container>
-
-    <!-- Weight Column -->
-    <ng-container matColumnDef="company">
-      <th mat-header-cell *matHeaderCellDef> Company </th>
-      <td mat-cell *matCellDef="let element"> {{element.company?.name}} </td>
-    </ng-container>
+  <div class="row table-caption">
+    <div class="col-md-12">
+      <h3>Deleted Employee List</h3>
+    </div>
 
 
+  </div>
 
-    <!-- Get Details -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button color="primary" class="btn-action"  (click)="openDialog('restore', element.id)">Restore</button>
-      </td>
-    </ng-container>
+  <div class="mat-elevation-z8" style="margin-bottom: 50px;">
+    <table mat-table [dataSource]="deletedUsers">
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="9999">
-        No Results found.
-      </td>
-    </tr>
-  </table>
+      <!-- Position Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
 
-  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
-</div>
+      <!-- Name Column -->
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef> Address </th>
+        <td mat-cell *matCellDef="let element"> {{element.address?.street}} {{element.address?.city}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="company">
+        <th mat-header-cell *matHeaderCellDef> Company </th>
+        <td mat-cell *matCellDef="let element"> {{element.company?.name}} </td>
+      </ng-container>
+
+
+
+      <!-- Get Details -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button color="primary" class="btn-action"
+            (click)="openDialog('restore', element.id)">Restore</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9999">
+          No Results found.
+        </td>
+      </tr>
+    </table>
+
+    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+  </div>
+</form>
